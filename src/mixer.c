@@ -63,35 +63,35 @@ struct loop_data
 
 #define ANTICLICK_FPSHIFT	24
 
-MIX_FN(mono_8bit_nearest);
-MIX_FN(mono_8bit_linear);
-MIX_FN(mono_16bit_nearest);
-MIX_FN(mono_16bit_linear);
-MIX_FN(stereo_8bit_nearest);
-MIX_FN(stereo_8bit_linear);
-MIX_FN(stereo_16bit_nearest);
-MIX_FN(stereo_16bit_linear);
-MIX_FN(mono_8bit_spline);
-MIX_FN(mono_16bit_spline);
-MIX_FN(stereo_8bit_spline);
-MIX_FN(stereo_16bit_spline);
+MIX_FN(monoout_mono_8bit_nearest);
+MIX_FN(monoout_mono_8bit_linear);
+MIX_FN(monoout_mono_16bit_nearest);
+MIX_FN(monoout_mono_16bit_linear);
+MIX_FN(stereoout_mono_8bit_nearest);
+MIX_FN(stereoout_mono_8bit_linear);
+MIX_FN(stereoout_mono_16bit_nearest);
+MIX_FN(stereoout_mono_16bit_linear);
+MIX_FN(monoout_mono_8bit_spline);
+MIX_FN(monoout_mono_16bit_spline);
+MIX_FN(stereoout_mono_8bit_spline);
+MIX_FN(stereoout_mono_16bit_spline);
 
 #ifndef LIBXMP_CORE_DISABLE_IT
-MIX_FN(mono_8bit_linear_filter);
-MIX_FN(mono_16bit_linear_filter);
-MIX_FN(stereo_8bit_linear_filter);
-MIX_FN(stereo_16bit_linear_filter);
-MIX_FN(mono_8bit_spline_filter);
-MIX_FN(mono_16bit_spline_filter);
-MIX_FN(stereo_8bit_spline_filter);
-MIX_FN(stereo_16bit_spline_filter);
+MIX_FN(monoout_mono_8bit_linear_filter);
+MIX_FN(monoout_mono_16bit_linear_filter);
+MIX_FN(stereoout_mono_8bit_linear_filter);
+MIX_FN(stereoout_mono_16bit_linear_filter);
+MIX_FN(monoout_mono_8bit_spline_filter);
+MIX_FN(monoout_mono_16bit_spline_filter);
+MIX_FN(stereoout_mono_8bit_spline_filter);
+MIX_FN(stereoout_mono_16bit_spline_filter);
 #endif
 
 #ifdef LIBXMP_PAULA_SIMULATOR
-MIX_FN(mono_a500);
-MIX_FN(mono_a500_filter);
-MIX_FN(stereo_a500);
-MIX_FN(stereo_a500_filter);
+MIX_FN(monoout_mono_a500);
+MIX_FN(monoout_mono_a500_filter);
+MIX_FN(stereoout_mono_a500);
+MIX_FN(stereoout_mono_a500_filter);
 #endif
 
 /* Mixers array index:
@@ -104,52 +104,52 @@ MIX_FN(stereo_a500_filter);
 typedef void (*MIX_FP) (struct mixer_voice *, int32 *, int, int, int, int, int, int, int);
 
 static MIX_FP nearest_mixers[] = {
-	libxmp_mix_mono_8bit_nearest,
-	libxmp_mix_mono_16bit_nearest,
-	libxmp_mix_stereo_8bit_nearest,
-	libxmp_mix_stereo_16bit_nearest,
+	libxmp_mix_monoout_mono_8bit_nearest,
+	libxmp_mix_monoout_mono_16bit_nearest,
+	libxmp_mix_stereoout_mono_8bit_nearest,
+	libxmp_mix_stereoout_mono_16bit_nearest,
 
 #ifndef LIBXMP_CORE_DISABLE_IT
-	libxmp_mix_mono_8bit_nearest,
-	libxmp_mix_mono_16bit_nearest,
-	libxmp_mix_stereo_8bit_nearest,
-	libxmp_mix_stereo_16bit_nearest,
+	libxmp_mix_monoout_mono_8bit_nearest,
+	libxmp_mix_monoout_mono_16bit_nearest,
+	libxmp_mix_stereoout_mono_8bit_nearest,
+	libxmp_mix_stereoout_mono_16bit_nearest,
 #endif
 };
 
 static MIX_FP linear_mixers[] = {
-	libxmp_mix_mono_8bit_linear,
-	libxmp_mix_mono_16bit_linear,
-	libxmp_mix_stereo_8bit_linear,
-	libxmp_mix_stereo_16bit_linear,
+	libxmp_mix_monoout_mono_8bit_linear,
+	libxmp_mix_monoout_mono_16bit_linear,
+	libxmp_mix_stereoout_mono_8bit_linear,
+	libxmp_mix_stereoout_mono_16bit_linear,
 
 #ifndef LIBXMP_CORE_DISABLE_IT
-	libxmp_mix_mono_8bit_linear_filter,
-	libxmp_mix_mono_16bit_linear_filter,
-	libxmp_mix_stereo_8bit_linear_filter,
-	libxmp_mix_stereo_16bit_linear_filter
+	libxmp_mix_monoout_mono_8bit_linear_filter,
+	libxmp_mix_monoout_mono_16bit_linear_filter,
+	libxmp_mix_stereoout_mono_8bit_linear_filter,
+	libxmp_mix_stereoout_mono_16bit_linear_filter
 #endif
 };
 
 static MIX_FP spline_mixers[] = {
-	libxmp_mix_mono_8bit_spline,
-	libxmp_mix_mono_16bit_spline,
-	libxmp_mix_stereo_8bit_spline,
-	libxmp_mix_stereo_16bit_spline,
+	libxmp_mix_monoout_mono_8bit_spline,
+	libxmp_mix_monoout_mono_16bit_spline,
+	libxmp_mix_stereoout_mono_8bit_spline,
+	libxmp_mix_stereoout_mono_16bit_spline,
 
 #ifndef LIBXMP_CORE_DISABLE_IT
-	libxmp_mix_mono_8bit_spline_filter,
-	libxmp_mix_mono_16bit_spline_filter,
-	libxmp_mix_stereo_8bit_spline_filter,
-	libxmp_mix_stereo_16bit_spline_filter
+	libxmp_mix_monoout_mono_8bit_spline_filter,
+	libxmp_mix_monoout_mono_16bit_spline_filter,
+	libxmp_mix_stereoout_mono_8bit_spline_filter,
+	libxmp_mix_stereoout_mono_16bit_spline_filter
 #endif
 };
 
 #ifdef LIBXMP_PAULA_SIMULATOR
 static MIX_FP a500_mixers[] = {
-	libxmp_mix_mono_a500,
+	libxmp_mix_monoout_mono_a500,
 	NULL,
-	libxmp_mix_stereo_a500,
+	libxmp_mix_stereoout_mono_a500,
 	NULL,
 	NULL,
 	NULL,
@@ -159,9 +159,9 @@ static MIX_FP a500_mixers[] = {
 
 
 static MIX_FP a500led_mixers[] = {
-	libxmp_mix_mono_a500_filter,
+	libxmp_mix_monoout_mono_a500_filter,
 	NULL,
-	libxmp_mix_stereo_a500_filter,
+	libxmp_mix_stereoout_mono_a500_filter,
 	NULL,
 	NULL,
 	NULL,
@@ -230,8 +230,8 @@ static void do_anticlick(struct context_data *ctx, int voc, int32 *buf, int coun
 	int stepmul, stepval;
 	uint32 stepmul_sq;
 
-	smp_r = vi->sright;
 	smp_l = vi->sleft;
+	smp_r = vi->sright;
 	vi->sright = vi->sleft = 0;
 
 	if (smp_l == 0 && smp_r == 0) {
@@ -257,8 +257,8 @@ static void do_anticlick(struct context_data *ctx, int voc, int32 *buf, int coun
 			/* Truncate to 16-bits of precision so the product is 32-bits. */
 			stepmul_sq = stepmul >> (ANTICLICK_FPSHIFT - 16);
 			stepmul_sq *= stepmul_sq;
-			*buf++ += (stepmul_sq * (int64)smp_r) >> 32;
 			*buf++ += (stepmul_sq * (int64)smp_l) >> 32;
+			*buf++ += (stepmul_sq * (int64)smp_r) >> 32;
 		}
 	} else {
 		while ((stepmul -= stepval) > 0) {
@@ -453,6 +453,29 @@ static int loop_reposition(struct context_data *ctx, struct mixer_voice *vi,
 	return loop_changed;
 }
 
+/* Calculate the required number of sample frames to render a tick.
+ * Returns -1 if any of the parameters are invalid. */
+int libxmp_mixer_get_ticksize(int freq, double time_factor, double rrate, int bpm)
+{
+	double calc;
+	int ticksize;
+
+	if (freq <= 0 || bpm <= 0 || time_factor <= 0.0 || rrate <= 0.0) {
+		return -1;
+	}
+
+	calc = freq * time_factor * rrate / bpm / 1000;
+	if (calc > INT_MAX || calc != calc /* NaN */) {
+		return -1;
+	}
+
+	ticksize = (int)calc;
+
+	if (ticksize < (1 << ANTICLICK_SHIFT))
+		ticksize = 1 << ANTICLICK_SHIFT;
+
+	return ticksize;
+}
 
 /* Prepare the mixer for the next tick */
 void libxmp_mixer_prepare(struct context_data *ctx)
@@ -462,10 +485,12 @@ void libxmp_mixer_prepare(struct context_data *ctx)
 	struct mixer_data *s = &ctx->s;
 	int bytelen;
 
-	s->ticksize = s->freq * m->time_factor * m->rrate / p->bpm / 1000;
+	s->ticksize = libxmp_mixer_get_ticksize(s->freq, m->time_factor, m->rrate, p->bpm);
 
-	if (s->ticksize < (1 << ANTICLICK_SHIFT))
-		s->ticksize = 1 << ANTICLICK_SHIFT;
+	/* Protect the mixer from broken values caused by xmp_set_tempo_factor. */
+	if (s->ticksize < 0 || s->ticksize > (XMP_MAX_FRAMESIZE / 2)) {
+		s->ticksize = XMP_MAX_FRAMESIZE / 2;
+	}
 
 	bytelen = s->ticksize * sizeof(int32);
 	if (~s->format & XMP_FORMAT_MONO) {
@@ -473,6 +498,7 @@ void libxmp_mixer_prepare(struct context_data *ctx)
 	}
 	memset(s->buf32, 0, bytelen);
 }
+
 /* Fill the output buffer calling one of the handlers. The buffer contains
  * sound for one tick (a PAL frame or 1/50s for standard vblank-timed mods)
  */
@@ -566,11 +592,11 @@ void libxmp_mixer_softmixer(struct context_data *ctx)
 		}
 
 		if (vi->pan == PAN_SURROUND) {
-			vol_r = vol * 0x80;
-			vol_l = -vol * 0x80;
+			vol_l = vol * 0x80;
+			vol_r = -vol * 0x80;
 		} else {
-			vol_r = vol * (0x80 - vi->pan);
-			vol_l = vol * (0x80 + vi->pan);
+			vol_l = vol * (0x80 - vi->pan);
+			vol_r = vol * (0x80 + vi->pan);
 		}
 
 		if (vi->smp < mod->smp) {
@@ -649,9 +675,11 @@ void libxmp_mixer_softmixer(struct context_data *ctx)
 				/* For Hipolito's anticlick routine */
 				if (samples > 0) {
 					if (~s->format & XMP_FORMAT_MONO) {
-						prev_r = buf_pos[mix_size - 2];
+						prev_l = buf_pos[mix_size - 2];
+						prev_r = buf_pos[mix_size - 1];
+					} else {
+						prev_l = buf_pos[mix_size - 1];
 					}
-					prev_l = buf_pos[mix_size - 1];
 				} else {
 					prev_r = prev_l = 0;
 				}
@@ -691,12 +719,13 @@ void libxmp_mixer_softmixer(struct context_data *ctx)
 					vi->old_vl += samples * delta_l;
 					vi->old_vr += samples * delta_r;
 
-
 					/* For Hipolito's anticlick routine */
 					if (~s->format & XMP_FORMAT_MONO) {
-						vi->sright = buf_pos[-2] - prev_r;
+						vi->sleft = buf_pos[-2] - prev_l;
+						vi->sright = buf_pos[-1] - prev_r;
+					} else {
+						vi->sleft = buf_pos[-1] - prev_l;
 					}
-					vi->sleft = buf_pos[-1] - prev_l;
 				}
 			}
 

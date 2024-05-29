@@ -63,7 +63,8 @@ API		= get_format_list create_context free_context \
 		  start_player play_buffer \
 		  set_position prev_position set_position_midfx set_row \
 		  set_player stop_module restart_module seek_time \
-		  channel_mute channel_vol inject_event scan_module
+		  channel_mute channel_vol inject_event scan_module \
+		  set_tempo_factor
 
 API_SMIX	= smix_play_instrument smix_load_sample smix_play_sample \
 		  smix_channel_pan
@@ -226,16 +227,16 @@ OPENMPT_MOD	= amigalimitsfinetune \
 		  vibratoreset
 
 MIXER		= interpolation_default interpolation_loop bidi_sync \
-		  mono_8bit_nearest mono_16bit_nearest \
-		  stereo_8bit_nearest stereo_16bit_nearest \
-		  mono_8bit_linear mono_16bit_linear \
-		  stereo_8bit_linear stereo_16bit_linear \
-		  mono_8bit_linear_filter mono_16bit_linear_filter \
-		  stereo_8bit_linear_filter stereo_16bit_linear_filter \
-		  mono_8bit_spline mono_16bit_spline \
-		  stereo_8bit_spline stereo_16bit_spline \
-		  mono_8bit_spline_filter mono_16bit_spline_filter \
-		  stereo_8bit_spline_filter stereo_16bit_spline_filter \
+		  monoout_mono_8bit_nearest monoout_mono_16bit_nearest \
+		  stereoout_mono_8bit_nearest stereoout_mono_16bit_nearest \
+		  monoout_mono_8bit_linear monoout_mono_16bit_linear \
+		  stereoout_mono_8bit_linear stereoout_mono_16bit_linear \
+		  monoout_mono_8bit_linear_filter monoout_mono_16bit_linear_filter \
+		  stereoout_mono_8bit_linear_filter stereoout_mono_16bit_linear_filter \
+		  monoout_mono_8bit_spline monoout_mono_16bit_spline \
+		  stereoout_mono_8bit_spline stereoout_mono_16bit_spline \
+		  monoout_mono_8bit_spline_filter monoout_mono_16bit_spline_filter \
+		  stereoout_mono_8bit_spline_filter stereoout_mono_16bit_spline_filter \
 		  downmix_8bit downmix_16bit mpt116_preamp
 
 READ		= file_32bit_little_endian file_32bit_big_endian \
@@ -707,7 +708,7 @@ gen_module_data: gen_module_data.o util.o ${SRC_PATH}/hio.o ${SRC_PATH}/dataio.o
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo LD $@ ; fi; \
 	eval $$CMD
 
-xmpchk: libxmp_fuzz.o ${SRC_PATH}/loaders/vorbis.o
+xmpchk: libxmp_fuzz.o ${SRC_PATH}/rng.o ${SRC_PATH}/loaders/vorbis.o
 	@CMD='$(LD) $(LDFLAGS) -o $@ $^ -L../lib -lxmp $(LIBS)'; \
 	if [ "$(V)" -gt 0 ]; then echo $$CMD; else echo LD $@ ; fi; \
 	eval $$CMD

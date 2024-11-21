@@ -255,6 +255,7 @@ test_api_channel_vol
 test_api_inject_event
 test_api_scan_module
 test_api_set_tempo_factor
+test_api_set_instrument_path
 test_api_smix_play_instrument
 test_api_smix_load_sample
 test_api_smix_play_sample
@@ -355,6 +356,7 @@ test_effect_far_vibrato
 test_effect_far_vibrato_per
 test_effect_far_volslide
 test_effect_far_tempo
+test_effect_ult_tempo
 test_effect_ult_toneporta
 test_prev_order_start
 test_prev_order_skip
@@ -389,8 +391,8 @@ test_openmpt_xm_3xxins
 test_openmpt_xm_3xx_no_old_samp
 test_openmpt_xm_3xx_no_old_samp_noft
 test_openmpt_xm_arpeggio
-test_openmpt_xm_arpeggioclamp
-test_openmpt_xm_arpslide
+test_openmpt_xm_arpeggioclamp_old
+test_openmpt_xm_arpslide_old
 test_openmpt_xm_delay1
 test_openmpt_xm_delay2
 test_openmpt_xm_delay3
@@ -424,7 +426,7 @@ test_openmpt_xm_patterndelaysretrig
 test_openmpt_xm_patloop_break
 test_openmpt_xm_patloop_weird
 test_openmpt_xm_pickup
-test_openmpt_xm_porta_linkmem
+test_openmpt_xm_porta_linkmem_old
 test_openmpt_xm_porta_offset
 test_openmpt_xm_porta_pickup
 test_openmpt_xm_setenvpos

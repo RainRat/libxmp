@@ -1,5 +1,5 @@
 /* Extended Module Player
- * Copyright (C) 1996-2023 Claudio Matsuoka and Hipolito Carraro Jr
+ * Copyright (C) 1996-2024 Claudio Matsuoka and Hipolito Carraro Jr
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -467,10 +467,12 @@ int libxmp_check_filename_case(const char *dir, const char *name, char *new_name
 
 static const char *libxmp_get_instrument_path(struct module_data *m)
 {
-	char *env;
+	const char *env;
 	if (m->instrument_path) {
 		return m->instrument_path;
-	} else if ((env = getenv("XMP_INSTRUMENT_PATH"))) {
+	}
+	env = getenv("XMP_INSTRUMENT_PATH");
+	if (env) {
 		return env;
 	}
 	return NULL;

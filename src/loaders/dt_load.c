@@ -41,7 +41,7 @@
  * they were just picked so the "commercial" formats with VERS would
  * have higher values than those determined by the pattern format.
  * Note that commercial versions 1.0 through 1.9 come after 2.04, and
- * versions prior to 2.03 did not support the DTM format. VERS and
+ * versions prior to 2.015 did not support the DTM format. VERS and
  * SV19 are not emitted up through at least version DT 1.901, so most
  * of the commercial versions will have their modules IDed as 2.04.
  * Later versions (1.914 and 1.917 confirmed) are aware of VERS and SV19.
@@ -49,14 +49,15 @@
  * Note that there's a later Digital Tracker release series for BeOS
  * using a completely new format that this loader doesn't support.
  */
-#define DTM_V203	203		/* Digital Tracker 2.03 */
-#define DTM_V204	204		/* Digital Tracker 2.04 thru 1.9 */
+#define DTM_V2015	2015		/* Digital Tracker 2.015 and 2.02 */
+#define DTM_V203	2030		/* Digital Tracker 2.03 */
+#define DTM_V204	2040		/* Digital Tracker 2.04 thru 1.9 */
 #define DTM_V19		(19 << 8)	/* Digital Tracker 1.9 (later vers) */
 #define DTM_V21		(21 << 8)	/* Digital Home Studio */
 
 /* Pattern format versions, which don't correspond directly to file
- * format versions. Version 2.03 has all zero bytes here and stores
- * its patterns using the Protracker format; 2.04 through 1.9 use ASCII
+ * format versions. Versions 2.015 thru 2.03 have all zero bytes here and
+ * store patterns using the Protracker format; 2.04 through 1.9 use ASCII
  * "2.04" and store note numbers instead of periods; Digital Home Studio
  * uses an ASCII "2.06" and stores completely unpacked pattern fields.
  */
@@ -88,11 +89,11 @@ static int dt_test(HIO_HANDLE *f, char *t, const int start)
 
 	size = hio_read32b(f);		/* chunk size */
 	hio_read16b(f);			/* type */
-	hio_read16b(f);			/* stereo mode; global depth (2.03) */
+	hio_read16b(f);			/* stereo mode; global depth (pre-2.04) */
 	hio_read16b(f);			/* reserved */
 	hio_read16b(f);			/* tempo */
 	hio_read16b(f);			/* bpm */
-	hio_read32b(f);			/* global sample rate (2.03) */
+	hio_read32b(f);			/* global sample rate (pre-2.04) */
 
 	CLAMP(size, 14, XMP_NAME_SIZE + 14);
 	size -= 14;
@@ -109,8 +110,8 @@ struct local_data {
 	int pflag;
 	int sflag;
 	int stereo; /* 0=old stereo, ff=panoramic stereo (>=2.04) */
-	int depth; /* global sample depth used by 2.03 modules */
-	int c2spd; /* global sample rate used by 2.03 modules */
+	int depth; /* global sample depth used by pre-2.04 modules */
+	int c2spd; /* global sample rate used by pre-2.04 modules */
 	int version;
 	int version_derived;
 	int format;
@@ -142,7 +143,7 @@ static void dtm_translate_effect(struct xmp_event *event,
 
 	case 0x0:			/* arpeggio */
 		/* DT beta through 2.04: does nothing. */
-		if (data->version_derived == DTM_V203) {
+		if (data->version_derived <= DTM_V203) {
 			event->fxp = 0;
 		}
 		break;
@@ -215,13 +216,14 @@ static void dtm_translate_effect(struct xmp_event *event,
 		 * This works as expected from 1.901 onward.
 		 * TODO: does anything rely on the broken version?
 		 */
-		if (data->version_derived == DTM_V203) {
+		if (data->version_derived <= DTM_V203) {
 			event->fxp = 0;
 		}
 		break;
 
 	case 0xf:			/* set speed/tempo */
-		/* DT 2.03 and 2.04: 0 and 20h act like speed 1 (no clamp)
+		/* DT beta: all parameters set speed, 0 acts like 1
+		 * DT 1.01 thru 2.04: 0 and 20h act like speed 1 (no clamp)
 		 * DT commercial 1.0: 0 and 20h act like speed 1 (clamped to 66)
 		 * DT commercial 1.1: 0 and 20h act like speed 1 (no clamp)
 		 * DT commercial 1.2: 0 is ignored, 20h is a BPM (clamped to 66)
@@ -230,7 +232,7 @@ static void dtm_translate_effect(struct xmp_event *event,
 		 * bugs with slow BPMs. Whatever issue was fixed by 1.901.
 		 * TODO: what does anything actually rely on, if at all?
 		 */
-		if (data->version_derived == DTM_V203) {
+		if (data->version_derived <= DTM_V203) {
 			if (event->fxp == 0 || event->fxp == 0x20) {
 				event->fxp = 1;
 			}
@@ -337,23 +339,25 @@ static int get_d_t_(struct module_data *m, int size, HIO_HANDLE *f, void *parm)
 
 	hio_read16b(f);			/* type */
 	data->stereo = hio_read8(f);	/* 0:old stereo, ff:panoramic stereo */
-	data->depth = hio_read8(f);	/* global sample bit depth (2.03) */
+	data->depth = hio_read8(f);	/* global sample bit depth (pre-2.04) */
 	hio_read16b(f);			/* reserved */
 	mod->spd = hio_read16b(f);
 	if ((b = hio_read16b(f)) > 0)	/* RAMBO.DTM has bpm 0 */
 		mod->bpm = b;		/* Not clamped by Digital Tracker. */
-	data->c2spd = hio_read32b(f);	/* global sample rate (2.03) */
+	data->c2spd = hio_read32b(f);	/* global sample rate (pre-2.04) */
 
 	if (data->stereo != DTM_OLD_STEREO && data->stereo != DTM_PANORAMIC_STEREO) {
 		D_(D_WARN "unknown stereo mode: %d, report this", data->stereo);
 		data->stereo = DTM_OLD_STEREO;
 	}
 
-	/* Global sample depth is applied to all samples in 2.03.
+	/* Global sample depth is applied to all samples pre-2.04.
 	 * Later Digital Tracker versions incorrectly ignore this field when
-	 * importing 2.03 modules.
+	 * importing pre-2.04 modules.
+	 *
+	 * DT 2.015 and 2.02 will save a value of 0 in this field.
 	 */
-	if (data->depth != 8 && data->depth != 16) {
+	if (data->depth != 0 && data->depth != 8 && data->depth != 16) {
 		D_(D_WARN "unknown global sample depth %d", data->depth);
 		data->depth = 8;
 	}
@@ -499,7 +503,14 @@ static int get_patt(struct module_data *m, int size, HIO_HANDLE *f, void *parm)
 		 (data->format == FORMAT_V206) ? DTM_V21 : DTM_V204;
 	} else {
 		D_(D_INFO "PATT format    : Protracker");
-		data->version_derived = DTM_V203;
+
+		/* DTM 2.015/2.02 have depth=0 and 31 instruments instead of 63.
+		 * There are also modules with depth!=0 but 31 instruments,
+		 * and it's not clear what the origin of those is. */
+		if (data->depth != 0)
+			data->version_derived = DTM_V203;
+		else
+			data->version_derived = DTM_V2015;
 	}
 
 	if (data->vers_flag && data->version) {
@@ -578,12 +589,12 @@ static int get_inst(struct module_data *m, int size, HIO_HANDLE *f, void *parm)
 
 		libxmp_instrument_name(mod, i, buf + 18, 22);
 
-		/* DT 2.03: global sample depth is used for playback; the
+		/* DT pre-2.04: global sample depth is used for playback; the
 		 * sample depth field seems to be for the resampler only.
 		 * See Lot/5th-2.dtm, which relies on this.
 		 */
-		if (data->version_derived == DTM_V203) {
-			buf[41] = data->depth;
+		if (data->version_derived <= DTM_V203) {
+			buf[41] = data->depth ? data->depth : 8;
 		}
 
 		stereo = buf[40];	/* stereo */
@@ -636,10 +647,10 @@ static int get_inst(struct module_data *m, int size, HIO_HANDLE *f, void *parm)
 		/*hio_read16b(f);*/			/* unknown (0x0000) */
 		c2spd = readmem32b(buf + 46);		/* frequency */
 
-		/* DT 2.03: the sample rate is used for resampling only(?)
+		/* DT pre-2.04: the sample rate is used for resampling only(?)
 		 * and the global sample rate is used for playback instead.
 		 * This field was removed from 2.04. */
-		if (data->version_derived == DTM_V203) {
+		if (data->version_derived <= DTM_V203) {
 			c2spd = data->c2spd;
 		}
 		libxmp_c2spd_to_note(c2spd, &mod->xxi[i].sub[0].xpo, &mod->xxi[i].sub[0].fin);
@@ -886,8 +897,10 @@ static int dt_load(struct module_data *m, HIO_HANDLE *f, const int start)
 				data.version / 10, data.version % 10);
 	} else if (data.format == FORMAT_V204) {
 		libxmp_set_type(m, "Digital Tracker 2.04 DTM");
-	} else {
+	} else if (data.depth != 0) {
 		libxmp_set_type(m, "Digital Tracker 2.03 DTM");
+	} else {
+		libxmp_set_type(m, "Digital Tracker 2.015 DTM");
 	}
 
 	if (data.version_derived >= DTM_V204 &&

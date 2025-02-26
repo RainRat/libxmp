@@ -157,8 +157,10 @@ test_loader_mdl0
 test_loader_mdl
 test_loader_med2
 test_loader_med3
+test_loader_med3_song
 test_loader_med4
 test_loader_med4_decvol
+test_loader_med4_song
 test_loader_mmd0
 test_loader_mmd0_compattempo
 test_loader_mmd1_longpat
@@ -361,6 +363,7 @@ test_effect_far_vibrato
 test_effect_far_vibrato_per
 test_effect_far_volslide
 test_effect_far_tempo
+test_effect_med_retrig
 test_effect_ult_tempo
 test_effect_ult_toneporta
 test_effect_pattern_loop_st301
@@ -557,6 +560,7 @@ test_player_med_instruments
 test_player_med_ss2defpitch
 test_player_med_synth
 test_player_med_synth_2
+test_player_med_compat_tempo
 test_player_hmn_extras
 test_player_note_off_ft2
 test_player_note_off_it
@@ -845,6 +849,7 @@ test_fuzzer_play_hmn_bad_megaarp
 test_fuzzer_play_mdl_high_c5spd
 test_fuzzer_play_mdl_zero_samples
 test_fuzzer_play_med4_0_chn_invalid_ord
+test_fuzzer_play_med4_hybrid_0_waveforms
 test_fuzzer_play_mmd1_synth_bad_tables
 test_fuzzer_play_rtm_autovib
 test_fuzzer_play_stm_bad_note_toneporta
